@@ -1,0 +1,37 @@
+#!usr/bin/python
+#The runtime on this is kind of long. 
+#The only way I can think of making it better is to call less functions but i ran out of time.
+
+import numpy as np
+from matplotlib import pyplot as plt
+
+def mandel_calc(c):
+	z=c
+	for n in range(250):
+		if abs(z)>2:
+			return(n)
+		z=z**2+c
+	return(0)
+
+def mandel_set(rcmin,rcmax,icmin,icmax,rstep,istep):
+	Re_c=np.linspace(rcmin,rcmax,rstep)
+	Im_c=np.linspace(icmin,icmax,istep)
+	iterations=np.empty((rstep,istep))
+	for i in range(rstep):
+		for j in range(istep):
+			iterations[i,j] = mandel_calc(Re_c[i] + 1j*Im_c[j])
+	return(Re_c,Im_c,iterations)
+
+def make_img(rcmin,rcmax,icmin,icmax):
+	imwidth,imheight = 512,384
+	ppi = 100
+	width = imwidth/ppi
+	height = imheight/ppi
+	Re_c,Im_c,itr=mandel_set(rcmin,rcmax,icmin,icmax,imwidth,imheight)	
+	fig, ax = plt.subplots(figsize=(width,height),dpi=ppi)
+	ax.set_title("Mandelbrot Set")
+	ax.imshow(itr.T,cmap="hot")
+	plt.show()
+
+if __name__=="__main__":
+	make_img(-0.75,-0.747,0.063,0.066)
